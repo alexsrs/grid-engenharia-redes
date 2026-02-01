@@ -147,3 +147,19 @@ console.table(outputTable);
 const buildTime = (end - start).toFixed(2);
 
 console.log(`\n✅ Build completed in ${buildTime}ms\n`);
+
+// Copy public/ into the output directory so static assets (images, icons)
+// referenced as /assets/... are available in the final build.
+try {
+  const publicDir = path.join(process.cwd(), "public");
+  const { cp } = await import("fs/promises");
+  if (existsSync(publicDir)) {
+    console.log(`📦 Copying public/ -> ${outdir}`);
+    await cp(publicDir, outdir, { recursive: true });
+    console.log("📁 public/ copied successfully.");
+  } else {
+    console.log("ℹ️  No public/ directory to copy.");
+  }
+} catch (err) {
+  console.warn("⚠️  Could not copy public/ to outdir:", err);
+}
