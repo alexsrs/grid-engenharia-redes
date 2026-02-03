@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function ContactForm(){
+type ContactFormProps = {
+  initialService?: string;
+  onClose?: () => void;
+};
+
+export default function ContactForm({ initialService, onClose }: ContactFormProps){
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [service, setService] = useState("CFTV e Câmeras");
+  const [service, setService] = useState(initialService ?? "CFTV e Câmeras");
   const [message, setMessage] = useState("");
   const max = 1000;
 
@@ -14,9 +19,13 @@ export default function ContactForm(){
     setCompany("");
     setEmail("");
     setPhone("");
-    setService("CFTV e Câmeras");
+    setService(initialService ?? "CFTV e Câmeras");
     setMessage("");
   }
+
+  useEffect(() => {
+    if (initialService) setService(initialService);
+  }, [initialService]);
 
   function handleSubmit(e: React.FormEvent){
     e.preventDefault();
@@ -31,6 +40,7 @@ export default function ContactForm(){
     // TODO: enviar para API
     handleReset();
     alert("Solicitação enviada (simulada). Entraremos em contato em breve.");
+    if (onClose) onClose();
   }
 
   return (
@@ -115,8 +125,8 @@ export default function ContactForm(){
             </div>
 
             <div className="flex items-center gap-3">
-              <button type="button" onClick={handleReset} className="bg-white text-slate-700 border border-slate-200 px-4 py-2 rounded">Limpar</button>
-              <button type="submit" className="ml-auto bg-emerald-500 text-white px-4 py-2 rounded">Solicitar Orçamento</button>
+              <button type="button" onClick={handleReset} className="bg-white text-slate-700 border border-slate-200 px-4 py-2 rounded cursor-pointer">Limpar</button>
+              <button type="submit" className="ml-auto bg-emerald-500 text-white px-4 py-2 rounded cursor-pointer">Solicitar Orçamento</button>
             </div>
           </form>
         </div>
